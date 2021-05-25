@@ -34,7 +34,7 @@ export const editCompanyThunk = (values,companyID,setErrors) => async (dispatch)
 }
 
 export const addServiceThunk = (serviceData) => async (dispatch) => {
-
+    // debugger
     const data = await companyAPI.addService(serviceData);
     if (data) {
 

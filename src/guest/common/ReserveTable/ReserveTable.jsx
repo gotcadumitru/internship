@@ -9,11 +9,14 @@ const ReserveTable = ({periodReservedTime,setPeriodReservedTime, companyWithServ
         setPeriodReservedTime(-1)
         // eslint-disable-next-line
     },[nrOfGuestsSelectedFromClient])
-    const [timeStart, timeEnd] = companyWithService.serviceWorkTime
+    const timeStart = companyWithService.serviceTimeStart;
+    const timeEnd = companyWithService.serviceTimeEnd;
     const duration = companyWithService.serviceDuration;
     const serviceAviability = ["mon","tue","wed","thu","fri","sat","sun"];
-    const tableTitle = <div className="admin_table_row"><div></div> {serviceAviability.map(dayOfWeek => {
-            return <div className="admin_table_col" key={dayOfWeek}>{dayOfWeek.toUpperCase()}</div>
+    const tableTitle = <div className="admin_table_row"><div></div> {serviceAviability.map((dayOfWeek,index) => {
+        const dayNow = new Date(selectedDay).getDay();
+        const day = dayNow === 0 ? 6 : dayNow-1
+            return <div className={`admin_table_col ${day === index ? "selected_day" : ""}`} key={dayOfWeek}>{dayOfWeek.toUpperCase()}</div>
     })} </div>
 
     const setTimeStringIntervals = () => {
@@ -83,7 +86,6 @@ const ReserveTable = ({periodReservedTime,setPeriodReservedTime, companyWithServ
                             const datenow = new Date(selectedDay).getDate();
                             const dayNow = new Date(selectedDay).getDay();
 
-                            const day = dayNow === 0 ? 6 : dayNow-1
 
                             const dayNumberOfWeek = dayNow === 0 ? datenow-dayNow+1-7 :  datenow-dayNow+1;
                             const weekNumber = getWeek(new Date(selectedDay)) ;
@@ -112,23 +114,23 @@ const ReserveTable = ({periodReservedTime,setPeriodReservedTime, companyWithServ
 
                             //Verific daca este destul spatiu pentru numarul de persoane ce a selectat utilizatorul
                             if(nrOfGuestsSelectedFromClient>companyWithService.serviceSpace || !findValuesFromAdmin.length || new Date().getTime()> getMsFromDate(selectedDay,dayNumberOfWeek,index,intervalSTR)){
-                                return <div className="admin_table_col" key={`${dayOfWeek} ${periodReservedTime}`}><FaRegTimesCircle  className={`period_busy ${day === index ? "selected_day" : ""}`} /></div>
+                                return <div className="admin_table_col" key={`${dayOfWeek} ${periodReservedTime}`}><FaRegTimesCircle  className={`period_busy`} /></div>
                             }
- 
 
                             const dayOfReservation = findValuesFromGuest.findIndex((ind,inde) =>{
                                  
-                                return new Date(allBookSelectedWeek[findValuesFromGuest[inde]]).getDay() -1 === index 
+                                return new Date(allBookSelectedWeek[findValuesFromGuest[inde]]).getDay() -1 === index
+                                 
                             })
 
                             const dayUser = new Date(allBookSelectedWeek[findValuesFromGuest[dayOfReservation]]).getDay()
                             const findIntervalDayNumber = dayUser === 0 ? 6 : dayUser - 1
 
                             if ((findIntervalDayNumber !== index) || (findValuesFromGuest.length+nrOfGuestsSelectedFromClient <= companyWithService.serviceSpace)) {
-                                return <div className="admin_table_col" key={`${dayOfWeek} ${periodReservedTime}`}><FaRegCheckCircle onClick={()=>{changePeriodStatus(selectedDay,dayNumberOfWeek,index,intervalSTR)}} className={`period_free ${day === index ? "selected_day" : ""}`} /></div>
+                                return <div className="admin_table_col" key={`${dayOfWeek} ${periodReservedTime}`}><FaRegCheckCircle onClick={()=>{changePeriodStatus(selectedDay,dayNumberOfWeek,index,intervalSTR)}} className={`period_free`} /></div>
                             }
                            
-                            return <div className="admin_table_col" key={`${dayOfWeek} ${periodReservedTime}`}><FaRegTimesCircle className={`period_busy ${day === index ? "selected_day" : ""}`} /></div>//X
+                            return <div className="admin_table_col" key={`${dayOfWeek} ${periodReservedTime}`}><FaRegTimesCircle className={`period_busy`} /></div>//X
 
                         })}</div>
                     })

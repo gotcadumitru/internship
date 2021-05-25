@@ -2,6 +2,8 @@
     background: white;
 }
 .companyNameLink{
+    display: flex;
+    flex-direction: row;
     cursor: pointer;
     color: black;
     text-decoration: none;
@@ -23,12 +25,17 @@
     width: 20px;
     margin-right: 10px;
 }
+.menuItem:hover .item_text{
+    text-decoration: underline;
+}
 .active-menu-item{
     background-color: #f1f5f8;
 }
-.menu-item-container{
+.menu_item_container{
     display: flex;
+    align-items: center;
     width: 150px;
+
 }
 .blogo{
     margin-right: 10px;

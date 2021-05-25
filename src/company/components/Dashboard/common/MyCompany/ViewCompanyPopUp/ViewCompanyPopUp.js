@@ -47,7 +47,7 @@ const ViewCompanyPopUp = ({ company, ...props }) => {
                                                                 {service.name}
                                                             </div>
                                                             <div className="view_company_info">
-                                                                <BiTimeFive className="view_company_icon" />    {`${service.workTime[0]} - ${service.workTime[1]}`}
+                                                                <BiTimeFive className="view_company_icon" />    {`${service.timeStart} - ${service.timeEnd}`}
                                                             </div>
                                                             <div className="view_company_info">
                                                                 <BiDollarCircle className="view_company_icon" />    {service.price}

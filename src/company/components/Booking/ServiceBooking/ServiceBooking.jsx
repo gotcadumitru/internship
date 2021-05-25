@@ -5,7 +5,7 @@ const ServiceBooking = ({period,service,...props}) =>{
     return (
         <>
         <div className="booking_row_table">
-            <div className="booking_col_table">
+            <div className="booking_col_table custom_scrollbar">
                 <div>
                 {`${period.firstName} ${period.lastName}`}
                 </div>

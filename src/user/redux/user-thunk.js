@@ -14,11 +14,13 @@ export const getUserThunk = () => async (dispatch) => {
         if (data?.succes) {
         dispatch(setUserAction(data.user));
         }
-        
+        else{
+            authToken.removeToken()
+            dispatch(setUserAction(null));
+        }
     }
     else{
         dispatch(setUserAction(null));
-        authToken.removeToken()
     }
 }
 export const registerNewUserThunk = (value) => async (dispatch) => {
@@ -63,6 +65,12 @@ export const forgotPasswordThunk = (email) => async (dispatch) => {
 export const resetPasswordThunk = (password, resetToken) => async (dispatch) => {
 
     return await authAPI.resetPassword(password, resetToken)
+
+}
+
+export const changePasswordThunk = (newPassword,oldPassword) => async (dispatch) => {
+
+    return await authAPI.changePassword(newPassword,oldPassword);
 
 }
 export const confirmRegistrationThunk = (confirmRegisterToken) => async (dispatch) => {

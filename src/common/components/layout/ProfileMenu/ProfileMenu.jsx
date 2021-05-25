@@ -1,44 +1,46 @@
 import React from 'react';
 import './ProfileMenu.css'
-import DashboardImage from '../../../../assets/images/dashboard/Dashboard.png';
-import ServiceImage from '../../../../assets/images/dashboard/Service.png';
-import BookingImage from '../../../../assets/images/dashboard/Booking.png';
-import {  useHistory, useLocation } from 'react-router';
-import CompanyName from '../../../company-name/CompanyName';
-const ProfileMenu = (props)=>{
 
-    
-    return(
+import {ReactComponent as DashboardImage } from '../../../../assets/images/dashboard/Dashboard.svg';
+
+import {ReactComponent as ServiceImage } from '../../../../assets/images/dashboard/Service.svg';
+import {ReactComponent as BookingImage } from '../../../../assets/images/dashboard/Booking.svg';
+import { useHistory, useLocation } from 'react-router';
+import CompanyName from '../../../company-name/CompanyName';
+const ProfileMenu = (props) => {
+    return (
 <>
-        <CompanyName/>
-        <MenuItem  {...props} img={DashboardImage} title="Dashboard"/>
-        <MenuItem  {...props} img={ServiceImage} title="Service" />
-        <MenuItem  {...props} img={BookingImage} title="Booking" />
+            <CompanyName />
+
+            <MenuItem  {...props} Component={DashboardImage} title="Dashboard"/>
+            <MenuItem  {...props} Component={ServiceImage} title="Service" />
+            <MenuItem  {...props} Component={BookingImage} title="Booking" />
 
        </>
     )
 }
 
 
-const MenuItem = (props)=>{
+const MenuItem = ({Component,...props})=>{
 
     const location = useLocation();
     const thisPath = location.pathname.split('/')[2];
     const history = useHistory();
     return (
-        <div onClick={()=>{history.push(`/profile/${props.title.toLowerCase()}`)}} className={`menuItem ${thisPath.toUpperCase() === props.title.toUpperCase() ? "active-menu-item" : ''}`}>
-        <div className="menu-item-container">
 
-            <div className="item_logo">
-                <img src={props.img} alt="$ "/>
-            </div>
+            <div onClick={() => { history.push(`/profile/${props.title.toLowerCase()}`) }} className={`menuItem ${thisPath?.toUpperCase() === props.title.toUpperCase() ? "active-menu-item" : ''}`}>
+                <div className="menu_item_container">
 
-            <div className="itemText">
-                {props.title}
+                    <div className="item_logo">
+                        <Component stroke={`${thisPath?.toUpperCase() === props.title.toUpperCase() && "#666"}`} style={{}}/>
+                    </div>
+
+                    <div className="item_text">
+                        {props.title}
+                    </div>
+                </div>
+
             </div>
-        </div>
-            
-        </div>  
 )
 }
 export default ProfileMenu

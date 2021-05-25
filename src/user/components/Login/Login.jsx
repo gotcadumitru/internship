@@ -1,31 +1,22 @@
 import {  Field, Form, Formik } from 'formik';
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import CustomButton from '../../../common/custom-button/CustomButton';
 import FormInput from '../../../common/form-input/FormInput';
-import { getUserAuthStatus } from '../../../selectors/selectors';
 import { loginThunk } from '../../redux/user-thunk';
 
 const Login = (props) => {
     
     const dispatch = useDispatch();
-
-    const isAuth = useSelector(getUserAuthStatus);
-
     const history = useHistory();
-    if (isAuth) {
-        history.push('/profile/dashboard');
-    }
-
-
 
     const handleSubmit =  (value, {setErrors}) => {
 
         dispatch(loginThunk(value)).then(res =>{
+            history.push('/profile/dashboard');
             }).catch(err=>{
-
             const data = err?.response?.data;
             setErrors({auth:data.error});
 
@@ -44,8 +35,6 @@ const Login = (props) => {
         email: '',
         password: '',
     }
-
-
 
     return (
 

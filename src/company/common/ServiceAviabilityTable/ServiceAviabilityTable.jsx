@@ -10,7 +10,7 @@ const ServiceAviabilityTable = ({formDataServices,...props}) => {
             // eslint-disable-next-line
     }, [timeStart,timeEnd,duration])
 
-    const tableTitle = <div className="admin_table_row title"> <div className="admin_table_col"/>{props.serviceAviability.map(dayOfWeek => {
+    const tableTitle = <div className="admin_table_row title"> <div className="admin_table_col"/>{props?.serviceAviability?.map(dayOfWeek => {
         return Object.keys(dayOfWeek).map(key => {
             return <div key={key} className="admin_table_col" xs={2}>{key.toUpperCase()}</div>
         })
@@ -48,7 +48,7 @@ const ServiceAviabilityTable = ({formDataServices,...props}) => {
                 {  Number(duration) >= 20
                     ? setTimeStringIntervals().map(intervalSTR => {
                     const intervalNumb = new Date(`1970-01-01T${intervalSTR}:00`).getTime()
-                    return <div key={intervalSTR} className="admin_table_row"> <div className="admin_table_col title">{intervalSTR}</div> {props.serviceAviability.map((dayOfWeek, index) => {
+                    return <div key={intervalSTR} className="admin_table_row"> <div className="admin_table_col title">{intervalSTR}</div> {props?.serviceAviability?.map((dayOfWeek, index) => {
                         return Object.keys(dayOfWeek).map(key => {
     
                             return <div key={key} className="admin_table_col" onClick={() => props.handleChangePeriodStatus(props.index,key, intervalNumb, index)}>

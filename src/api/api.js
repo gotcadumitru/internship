@@ -43,6 +43,19 @@ export const authAPI = {
             debugger
             return resp.data
     },
+    async changePassword(newPassword,oldPassword) {
+        const resp = await instance.post(`api/auth/changepassword`,
+        {
+            newPassword,
+            oldPassword
+        },
+        {
+            headers: {
+                'auth-token': authToken.getToken(),
+            }
+        });
+        return resp.data
+},
     async logingoogle(token) {
         try{
             const resp = await instance.post(`api/auth/googlelogin`,

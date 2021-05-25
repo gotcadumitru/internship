@@ -1,15 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import BlogoImage from '../../assets/images/dashboard/Blogo.png';
 
 const CompanyName = (props)=>{
     return (
-            <Link className="companyNameLink" to="/">
-                <div className="companyName">
-                    <img className="blogo" src={BlogoImage} alt="B"/>
+        <div className="companyName">
+                    <Link className="companyNameLink" to="/">
+                    <div className="company_symbol">
+                    B
+                    </div>
                     Booking.app
-                </div>
             </Link>
+                </div>
     )
 }
 export default CompanyName

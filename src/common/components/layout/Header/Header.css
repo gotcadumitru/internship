@@ -35,8 +35,8 @@
       height: 42px;
       font-style: normal;
       border-radius: 10px;
-
-      font-weight: 400;
+      border: none;
+      font-weight: 500;
       font-size: 16px;
       line-height: 18px;
       color: #F2F2F2;
@@ -48,6 +48,7 @@
 }
 .header_profile{
       display: flex;
+      cursor: pointer;
 }
 .header_profile_info{
       display: flex;
@@ -80,7 +81,15 @@
       color: #333333;
 }
 .header_user_image{
+      display: flex;
+      justify-content: center;
+      align-items: center;
       margin-right: 20px;
+      width: 50px;
+      height: 50px;
+}
+.header_user_image img{
+      width: 100%;
 }
 
 @media only screen and (max-width: 450px) {
@@ -88,4 +97,4 @@
       .header_profile{
           display: none;   
       }
-  }
+}

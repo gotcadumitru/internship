@@ -3,7 +3,7 @@ import {  useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { getCurrentUser } from '../../../../selectors/selectors';
 import { logOutThunk } from '../../../../user/redux/user-thunk';
-import Logo from './../../../../assets/images/dashboard/LogoUser.png'
+import Logo from './../../../../assets/images/dashboard/profileLogo.jpg'
 import './Header.css'
 
 const Header = (props) => {
@@ -28,9 +28,8 @@ const Header = (props) => {
                 <div className="header_options">
                     {user.name ?
                         <div className="option">
-                            <div>
 
-                               <div className="header_profile">
+                               <div onClick={()=>history.push('/profile')} className="header_profile">
                                      <div className="header_user_image">
                                         <img src={Logo} alt="dd"/>
                                      </div>
@@ -40,7 +39,6 @@ const Header = (props) => {
                                      </div>
                                </div>
 
-                            </div>
                             <div className="header_logout_container">
                                 {<button className="logout_button" onClick={signOut} to='/auth/login'>Log out</button>}
                             </div>

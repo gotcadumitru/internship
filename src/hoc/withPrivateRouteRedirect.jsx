@@ -4,7 +4,6 @@ import { authToken } from '../common/helpers/token.helper';
 
 
 export const WithPrivateRouteRedirect = (Component) => {
-
     const RedirectComponent = (props) => {
 
             if (authToken.getToken()) {

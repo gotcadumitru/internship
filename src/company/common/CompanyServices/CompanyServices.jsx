@@ -1,6 +1,6 @@
-import React, { useEffect,  useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CompanyServices.css'
-import { Field, Form, Formik, } from 'formik';
+import { Field, FieldArray, Form, Formik, } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import ServiceAviabilityTable from '../ServiceAviabilityTable/ServiceAviabilityTable';
@@ -38,48 +38,32 @@ const CompanyServices = ({ services, editMode, companyID, ...props }) => {
         // eslint-disable-next-line
     }, [])
 
-    const getValidationSchemaObject = () => {
-        let validationObj = {};
-        for (let i = 0; i < serviceAviability.length; i++) {
-            validationObj[`name${i}`] = Yup.string().required("This field is requird")
-            validationObj[`description${i}`] = Yup.string().required("This field is requird")
-            validationObj[`duration${i}`] = Yup.number().min(20, "Min time is 20 min").max(480, "Max time is 480 min").required("This field is requird")
-            validationObj[`space${i}`] = Yup.number().min(1, "Min number of pers is 1 person").max(9, "Max guests: 9").required("This field is requird")
-            validationObj[`price${i}`] = Yup.number().min(1, "Min price of pers is 1 RON").required("This field is requird")
-        }
-        return validationObj
-    }
+    const validationSchema = Yup.object().shape({
+        services: Yup.array()
+            .of(
+                Yup.object().shape({
+                    name: Yup.string().required("This field is requird"),
+                    description: Yup.string().required("This field is requird"),
+                    duration: Yup.number().min(20, "Min time is 20 min").max(480, "Max time is 480 min").required("This field is requird"),
+                    space: Yup.number().min(1, "Min number of pers is 1 person").max(9, "Max guests: 9").required("This field is requird"),
+                    price: Yup.number().min(1, "Min price of pers is 1 RON").required("This field is requird"),
+                })
+            )
+    });
 
-    const validationSchema = Yup.object().shape(getValidationSchemaObject())
-
-    const getInitialValuesObj = () => {
-        if (editMode) {
-            let initialObj = {};
-            for (let i = 0; i < services.length; i++) {
-                initialObj[`name${i}`] = services[i].name;
-                initialObj[`description${i}`] = services[i].description;
-                initialObj[`duration${i}`] = services[i].duration;
-                initialObj[`space${i}`] = services[i].space;
-                initialObj[`price${i}`] = services[i].price;
-                initialObj[`timeStart${i}`] = services[i].workTime[0];
-                initialObj[`timeEnd${i}`] = services[i].workTime[1];
-            }
-            initialObj.company = '';
-            return initialObj
+    const initialValues = editMode
+        ? { services: [...services] }
+        : {
+            services: [{
+                name: '',
+                description: '',
+                duration: 120,
+                space: '',
+                price: '',
+                timeStart: '06:00',
+                timeEnd: '23:00',
+            }]
         }
-        let initialObj = {};
-        for (let i = 0; i < 10; i++) {
-            initialObj[`name${i}`] = '';
-            initialObj[`description${i}`] = '';
-            initialObj[`duration${i}`] = 120;
-            initialObj[`space${i}`] = '';
-            initialObj[`price${i}`] = '';
-            initialObj[`timeStart${i}`] = '06:00';
-            initialObj[`timeEnd${i}`] = '23:00';
-        }
-        initialObj.company = '';
-        return initialObj
-    }
 
     const handleChangePeriodStatus = (serviceNumber, dayOfWeek, intervalNumb, index) => {
         let serviceAviabilityCopy = [...serviceAviability];
@@ -144,50 +128,45 @@ const CompanyServices = ({ services, editMode, companyID, ...props }) => {
         return periods;
     }
 
-    const handleAddServiceClick = () => {
-        if (serviceAviability.length < 10) {
-            setServiceAviability([...serviceAviability, [
-                { mon: [] },
-                { tue: [] },
-                { wed: [] },
-                { thu: [] },
-                { fri: [] },
-                { sat: [] },
-                { sun: [] },
-            ]]);
-        }
+    const handleAddServiceClick = (push) => {
+
+        setServiceAviability([...serviceAviability, [
+            { mon: [] },
+            { tue: [] },
+            { wed: [] },
+            { thu: [] },
+            { fri: [] },
+            { sat: [] },
+            { sun: [] },
+        ]]);
+        push({
+            name: '',
+            description: '',
+            duration: 120,
+            space: '',
+            price: '',
+            timeStart: '06:00',
+            timeEnd: '23:00',
+        })
     }
-    const getCurrentService = (values, i) => {
-        return {
-            name: values[`name${i}`],
-            description: values[`description${i}`],
-            duration: values[`duration${i}`],
-            space: values[`space${i}`],
-            price: values[`price${i}`],
-            timeStart: values[`timeStart${i}`],
-            timeEnd: values[`timeEnd${i}`],
-        }
-    }
+
 
     const handleSubmitServices = (value, { setErrors, ...formProps }) => {
+        // debugger
         if (companyID) {
 
-            let servicearr = serviceAviability.map((service, index) => {
-
+            const servicearr = value.services.map((service, index) => {
                 return {
-                    name: value[`name${index}`],
-                    description: value[`description${index}`],
-                    duration: value[`duration${index}`],
-                    space: value[`space${index}`],
-                    price: value[`price${index}`],
-                    workTime: [value[`timeStart${index}`], value[`timeEnd${index}`]],
+                    ...service,
                     periods: {
                         byAdmin: serviceAviability[index],
                         byGuests: [],
                     },
                 }
             })
+
             props.setPopUpOpen(false);
+
             if (editMode)
                 return dispatch(editServicesThunk({
                     services: servicearr,
@@ -195,7 +174,7 @@ const CompanyServices = ({ services, editMode, companyID, ...props }) => {
                     companyID: companyID
                 }))
 
-
+            // debugger
             return dispatch(addServiceThunk({
                 services: servicearr,
                 companyID: companyID
@@ -207,86 +186,94 @@ const CompanyServices = ({ services, editMode, companyID, ...props }) => {
         <div className="add_service_container">
 
 
-            <Formik initialValues={getInitialValuesObj()} onSubmit={handleSubmitServices} validationSchema={validationSchema}>
+            <Formik initialValues={initialValues} onSubmit={handleSubmitServices} validationSchema={validationSchema}>
                 {
-                    formProps => {
-                        // debugger
+                    ({ values }) => {
                         return (
                             <Form className="dashboard_add_service">
                                 {!companyID && <div className="error_message">Please save the company in the Profile menu if you want to add services</div>}
 
-                                {serviceAviability.map((period, i) => {
-                                    return (
-                                        <div key={i}>
-                                            <Row >
-                                                <Col xs={12} lg={6}>
-                                                    <Field component={FormInput}
-                                                        label="Service name"
-                                                        type="text"
-                                                        name={`name${i}`}
-                                                        inputname="Name"
-                                                    />
-                                                    <Row>
+                                <FieldArray
+                                    name="services">
+                                    {
+                                        ({ remove, push }) => {
+                                            return (
+                                                <>
+                                                    {values.services.map((period, i) => {
+                                                        return (
+                                                            <div key={i}>
+                                                                <Row >
+                                                                    <Col xs={12} lg={6}>
+                                                                        
+                                                                            <Field component={FormInput}
+                                                                                label="Service name"
+                                                                                type="text"
+                                                                                name={`services.${i}.name`}
+                                                                                inputname="Name"
+                                                                            />
+                                                                       
+                                                                        
+                                                                            <Field component={FormInput}
+                                                                                label="Start time"
+                                                                                type="time"
+                                                                                name={`services.${i}.timeStart`}
+                                                                                inputname="Start time" />
+                                                                       
+                                                                        
+                                                                            <Field component={FormInput}
+                                                                                label="End time"
+                                                                                type="time"
+                                                                                name={`services.${i}.timeEnd`}
+                                                                                inputname="End time" />
+                                                                       
+                                                                    </Col>
+                                                                    <Col xs={12} lg={6} className="service_input_container">
+                                                                        <Field component={FormInput}
+                                                                            label="Time in mins"
+                                                                            type="number"
+                                                                            name={`services.${i}.duration`}
+                                                                            inputname="Duration"
+                                                                        />
+                                                                        <Field component={FormInput}
+                                                                            label="Number of reservations for one hour"
+                                                                            type="number"
+                                                                            name={`services.${i}.space`}
+                                                                            inputname="Space"
+                                                                        />
+                                                                        <Field component={FormInput}
+                                                                            label="Price for service"
+                                                                            type="number"
+                                                                            name={`services.${i}.price`}
+                                                                            inputname="Price"
+                                                                        />
+                                                                    </Col>
+                                                                </Row>
 
-                                                        <Col xs={6}>
-                                                            <Field component={FormInput}
-                                                                label="Start work day"
-                                                                type="time"
-                                                                name={`timeStart${i}`}
-                                                                inputname="Start work day" />
-                                                        </Col>
-                                                        <Col xs={6}>
-                                                            <Field component={FormInput}
-                                                                label="End work day"
-                                                                type="time"
-                                                                name={`timeEnd${i}`}
-                                                                inputname="End work day" />
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                                <Col xs={12} lg={6} className="service_input_container">
-                                                    <Field component={FormInput}
-                                                        label="Time in mins"
-                                                        type="number"
-                                                        name={`duration${i}`}
-                                                        inputname="Duration"
-                                                    />
-                                                    <Field component={FormInput}
-                                                        label="Number of reservations for one hour"
-                                                        type="number"
-                                                        name={`space${i}`}
-                                                        inputname="Space"
-                                                    />
-                                                    <Field component={FormInput}
-                                                        label="Price for service"
-                                                        type="number"
-                                                        name={`price${i}`}
-                                                        inputname="Price"
-                                                    />
-                                                </Col>
-                                            </Row>
+                                                                <div>
 
-                                            <div>
+                                                                    <Field component={FormInput}
+                                                                        label="Service description"
+                                                                        type="textarea"
+                                                                        name={`services.${i}.description`}
+                                                                        inputname="Description"
+                                                                    />
 
-                                                <Field component={FormInput}
-                                                    label="Service description"
-                                                    type="textarea"
-                                                    name={`description${i}`}
-                                                    inputname="Description"
-                                                />
+                                                                </div>
+                                                                <ServiceAviabilityTable setInitialPeriods={setInitialPeriods} formDataServices={period} handleChangePeriodStatus={handleChangePeriodStatus} serviceAviability={serviceAviability[i]} index={i} />
 
-                                            </div>
-                                            <ServiceAviabilityTable setInitialPeriods={setInitialPeriods} formDataServices={getCurrentService(formProps.values, i)} handleChangePeriodStatus={handleChangePeriodStatus} serviceAviability={serviceAviability[i]} index={i} />
+                                                            </div>
+                                                        )
+                                                    })}
 
-                                        </div>
-                                    )
-                                })}
+                                                    <CustomButton type="submit" >Save Service</CustomButton>
+                                                    <div className="addOtherServiceBtn">
+                                                        {!editMode && serviceAviability.length < 100 && <span onClick={() => handleAddServiceClick(push)} >Add other services</span>}
+                                                    </div>
 
-                                <CustomButton type="submit" >Save Service</CustomButton>
-                                <div className="addOtherServiceBtn">
-                                    {!editMode && serviceAviability.length < 10 && <span onClick={handleAddServiceClick} >Add other services</span>}
-                                </div>
+                                                </>)
+                                        }}
 
+                                </FieldArray>
                             </Form>
                         )
                     }

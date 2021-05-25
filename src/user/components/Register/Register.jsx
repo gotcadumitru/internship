@@ -24,7 +24,6 @@ const Register = (props) => {
 
     }
 
-
     const initialValues = {
         name: '',
         surname: '',
@@ -75,7 +74,6 @@ const Register = (props) => {
 
     }
 
-
     const responseFacebook = (response) => {
         const { accessToken, userID } = response;
         if (accessToken)
@@ -92,9 +90,6 @@ const Register = (props) => {
     return (
 
         <div className="auth_component">
-
-
-
             <h2 className="auth_form_title">Create Account</h2>
             <GoogleLogin
                 render={(renderProps) => (
@@ -106,21 +101,22 @@ const Register = (props) => {
                 clientId="1057553385734-97f7heo0s1n4gvpvqa9q8qf6iati0rtd.apps.googleusercontent.com"
                 buttonText="LOGIN WITH GOOGLE"
                 onSuccess={responseGoogle}
-                onFailure={responseGoogle}
-
-            />
+                onFailure={responseGoogle}/>
+            
             <br />
+            
             <FacebookLogin
                 appId="912331699335421"
                 fields="name,email,picture"
                 callback={responseFacebook}
                 cssClass="facebook_lgin"
                 textButton="sign up with facebook"
-                icon={<FaFacebookF />}
-            />
+                icon={<FaFacebookF />}/>
+
             <div className="login_or_text">
                 <span className="login_or_line">or</span>
             </div>
+
             <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
                 {
                     formProps => {
@@ -162,19 +158,19 @@ const Register = (props) => {
                                     <span>I agree with term and services</span>
                                         {<div className="check_error">{formProps.errors.error}</div>}
                                     <div className="check_error"><ErrorMessage name="checkBox" /></div>
-
-
                                 </div>
 
                                 <CustomButton type="submit">Create Account</CustomButton>
+                            
                             </Form>)
                     }
                 }
 
             </Formik>
+
             <div className="auth_links">
                 Have an account?
-            <Link to="/auth/login">  Log In</Link>
+                <Link to="/auth/login">  Log In</Link>
             </div>
 
         </div>

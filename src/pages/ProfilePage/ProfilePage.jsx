@@ -5,12 +5,9 @@ import Header from '../../common/components/layout/Header/Header';
 import ProfileMenu from '../../common/components/layout/ProfileMenu/ProfileMenu';
 import { AiOutlineMenu } from "react-icons/ai";
 import './ProfilePage.css'
-import { Redirect, useLocation } from 'react-router';
 import { Col, Container, Row } from 'react-bootstrap';
 
 const ProfilePage = (props) => {
-
-    const location = useLocation()
 
     const { innerWidth: width} = window;
     const [isNavbarShow, handleNawbarStatus] = useState(width > 1000);
@@ -32,10 +29,6 @@ const ProfilePage = (props) => {
 
     // eslint-disable-next-line
     }, [toggleContainer]);
-
-    if (location.pathname === '/profile/' || location.pathname === '/profile') {
-        return <Redirect to='/profile/dashboard' />
-    }
     return (
 
         <Container fluid>

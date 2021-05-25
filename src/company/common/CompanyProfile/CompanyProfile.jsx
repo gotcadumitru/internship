@@ -1,5 +1,5 @@
 import React from 'react';
-import companyLogo from '../../../assets/images/dashboard/PlusLogoCompany.png'
+import {ReactComponent as CompanyLogo} from '../../../assets/images/dashboard/PlusLogoCompany.svg'
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup'
 import { useDispatch } from 'react-redux';
@@ -68,8 +68,12 @@ const CompanyProfile = ({setActiveSection,setPopUpOpen,company, editMode,...prop
                                         inputname="Image URL"
                                        />
                                 </div>
-
-                                    <div  style={{ backgroundImage: `url(${!formProps.errors.imageURL && formProps.values.imageURL.length > 0 ? formProps.values.imageURL :  companyLogo})`}} className="profile_logo_image" alt="LOGO" />
+                                {
+                                    !formProps.errors.imageURL && formProps.values.imageURL.length > 0
+                                    ?
+                                    <div  style={{ backgroundImage: `url(${formProps.values.imageURL})`}} className="profile_logo_image" alt="LOGO" />
+                                    : <div  className="profile_logo_image"><CompanyLogo className="add_company_plus"/></div>
+                                }
                             </Col>
 
                             

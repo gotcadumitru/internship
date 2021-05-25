@@ -60,31 +60,32 @@ const CompanyCard = ({ companyWithService }) => {
             <div className="view_company_content">
                 <div className="view_company_services">
 
-                    <div className="view_company_title">
+                    <div data-testid="company_title" className="view_company_title">
                         {companyWithService.companyName}
                     </div>
-                    <div className="view_company_desc custom_scrollbar">
-                        {companyWithService.companyDescription}
+                    <div data-testid="service_desc"  className="view_company_desc custom_scrollbar">
+                        {companyWithService.serviceDescription}
                     </div>
                     <div className="view_company_one_service">
-                        <div className="view_company_info">
+                        <div data-testid="service_name"  className="view_company_info">
                             <IoBagRemoveOutline className="view_company_icon" />
                             {companyWithService.serviceName}
                         </div>
-                        <div className="view_company_info">
-                            <BiTimeFive className="view_company_icon" />    {`${companyWithService.serviceWorkTime[0]} - ${companyWithService.serviceWorkTime[1]}`}
+                        <div data-testid="service_star"  className="view_company_info">
+                            <BiTimeFive className="view_company_icon" />{`${companyWithService.serviceTimeStart} - ${companyWithService.serviceTimeEnd}`}
+                        </div>
+                        <div data-testid="service_pric"  className="view_company_info">
+                            <BiDollarCircle className="view_company_icon" />{companyWithService.servicePrice}
                         </div>
                         <div className="view_company_info">
-                            <BiDollarCircle className="view_company_icon" />    {companyWithService.servicePrice}
-                        </div>
-                        <div className="view_company_info">
-                            <IoCalendarOutline className="view_company_icon" />    {getServiceAvailibilityString({periods:companyWithService.servicePeriods})}
+                            <IoCalendarOutline className="view_company_icon" />{getServiceAvailibilityString({periods:companyWithService.servicePeriods})}
                         </div>
                     </div>
                 </div>
 
-                            <CustomButton onClick={()=>{setPopUpOpen(true)}} profilebtn>Book Service</CustomButton>
-                <Popup open={popUpOpen} onClose={()=>onClosePopUp()} closeOnDocumentClick modal nested >
+                <CustomButton onClick={()=>{setPopUpOpen(true)}} profilebtn>Book Service</CustomButton>
+                
+                <Popup open={popUpOpen} onClose={()=>{setReservationMessage(null); onClosePopUp()}} closeOnDocumentClick modal nested >
                             
                     <div className="modal_popup custom_scrollbar" >
                         <div className="close" onClick={()=>setPopUpOpen(false)}>
@@ -92,7 +93,7 @@ const CompanyCard = ({ companyWithService }) => {
                         </div>
                     <div className="modal_popup_container">
 
-                        <h2 className="pop_up_title">{companyWithService.serviceName}</h2>
+                        <h2 data-testid="service_name"  className="pop_up_title">{companyWithService.serviceName}</h2>
                            
                             {
                                 reservationMessage ? 

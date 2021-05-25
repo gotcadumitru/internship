@@ -142,6 +142,11 @@
     border-radius: 20px;
 }
 
+.add_company_plus{
+    width:150px;
+    height:150px; 
+}
+
 .filter_select_input{
     border: 1px solid #BDBDBD;
 box-sizing: border-box;
