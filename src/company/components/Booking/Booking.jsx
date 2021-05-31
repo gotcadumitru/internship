@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getMyCompanies } from '../../../selectors/selectors';
+import { getIsLoadingCompanies, getMyCompanies } from '../../../selectors/selectors';
 import ServiceBooking from './ServiceBooking/ServiceBooking';
 import { BiFilterAlt } from "react-icons/bi";
 import { Container } from 'react-bootstrap';
 import ServiceBookingFilter from './ServiceBooking/ServiceBookingFilter/ServiceBookingFilter';
 import Popup from 'reactjs-popup';
+import CustomLoader from '../../../common/loader/Loader';
 
 const Booking = (props) => {
 
     const myCompanies = useSelector(getMyCompanies);
+    const isLoadingCompanies = useSelector(getIsLoadingCompanies);
+
     const [bookingFilterData, setBookingFilterData] = useState({
         service: '',
         time: '',
@@ -67,7 +70,7 @@ const Booking = (props) => {
                     && <>
                         <span onClick={() => { setPopUpOpen(true) }} className="filter_icon_profile">Filter <BiFilterAlt /></span>
 
-                        <Popup open={popUpOpen} onClose={()=>setPopUpOpen(false)} closeOnDocumentClick modal nested >
+                        <Popup open={popUpOpen} onClose={() => setPopUpOpen(false)} closeOnDocumentClick modal nested >
                             <div className="modal_popup custom_scrollbar" >
                                 <div className="close" onClick={() => setPopUpOpen(false)}>
                                     &times;
@@ -84,59 +87,63 @@ const Booking = (props) => {
                     </>
                 }
             </div>
-            <div className="my_companies">
-                <div className="booking_container">
+            {
+                isLoadingCompanies ?
+                    <CustomLoader />
+                    : <div className="my_companies">
+                        <div className="booking_container">
 
-                    {
-                        myFiltredCompanies.length > 0
-                            ? myFiltredCompanies.map(company => {
-                                return (
-                                    <div key={company._id}>
-                                        <>
-                                            <div className="company_booking">
-                                                <div>
-                                                    <div className="company_booking_name">{company.name}</div>
-                                                    <div className="company_booking_subtext">BOOKING APPOINTMENT</div>
-                                                </div>
-                                                <Container fluid className="booking_table">
+                            {
+                                (myFiltredCompanies.length > 0) && (myCompanies.length !== 0)
+                                    ? myFiltredCompanies.map(company => {
+                                        return (
+                                            <div key={company._id}>
+                                                <>
+                                                    <div className="company_booking">
+                                                        <div>
+                                                            <div className="company_booking_name">{company.name}</div>
+                                                            <div className="company_booking_subtext">BOOKING APPOINTMENT</div>
+                                                        </div>
+                                                        <Container fluid className="booking_table">
 
-                                                    <div className="booking_row_table title">
+                                                            <div className="booking_row_table title">
 
-                                                        <div className="booking_col_table">Customer name</div>
-                                                        <div className="booking_col_table">Service</div>
-                                                        <div className="booking_col_table">Booking time</div>
-                                                        <div className="booking_col_table">Duration</div>
-                                                        <div className="booking_col_table">Total price</div>
-                                                        <div className="booking_col_table">Cappacity</div>
+                                                                <div className="booking_col_table">Customer name</div>
+                                                                <div className="booking_col_table">Service</div>
+                                                                <div className="booking_col_table">Booking time</div>
+                                                                <div className="booking_col_table">Duration</div>
+                                                                <div className="booking_col_table">Total price</div>
+                                                                <div className="booking_col_table">Cappacity</div>
 
-                                                    </div>
+                                                            </div>
 
-                                                    {
-                                                        company.services.map(service => {
+                                                            {
+                                                                company.services.map(service => {
 
-                                                            return service.periods.byGuests
-                                                                .sort((per1, per2) => per2.time - per1.time)
-                                                                .map(period => {
-                                                                    return (
-                                                                            <ServiceBooking key={period+Math.random()} service={service} period={period} />
-                                                                    )
+                                                                    return service.periods.byGuests
+                                                                        .sort((per1, per2) => per2.time - per1.time)
+                                                                        .map(period => {
+                                                                            return (
+                                                                                <ServiceBooking key={period + Math.random()} service={service} period={period} />
+                                                                            )
+                                                                        })
                                                                 })
-                                                        })
 
 
-                                                    }
-                                                </Container>
+                                                            }
+                                                        </Container>
+                                                    </div>
+                                                </>
+
+
                                             </div>
-                                        </>
+                                        )
 
-
-                                    </div>
-                                )
-
-                            }) : <div>There are no reservations</div>
-                    }
-                </div>
-            </div>
+                                    }) : <div>There are no reservations</div>
+                            }
+                        </div>
+                    </div>
+            }
 
         </Container>
     )

@@ -10,14 +10,14 @@ import FormInput from '../../../common/form-input/FormInput';
 import CustomButton from '../../../common/custom-button/CustomButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginfacebookThunk, logingoogleThunk, registerNewUserThunk } from '../../redux/user-thunk';
-import { getUserAuthStatus } from '../../../selectors/selectors';
+import { getAuthStatus } from '../../../selectors/selectors';
 
 const Register = (props) => {
 
     const dispatch = useDispatch();
 
     const history = useHistory();
-    const isAuth = useSelector(getUserAuthStatus);
+    const isAuth = useSelector(getAuthStatus);
     if (isAuth) {
 
         history.push('/profile/dashboard');

@@ -40,7 +40,6 @@ export const authAPI = {
                 email,
                 password
             });
-            debugger
             return resp.data
     },
     async changePassword(newPassword,oldPassword) {

@@ -3,28 +3,27 @@ import { createSelector } from "reselect"
 export const getCompanies = (state)=>{
     return state.companies.companies
 }
-export const getCurrentUser = (state) =>{
-    return state.profileInfo.user
+
+export const getProfileInfo = (state) =>{
+    return state.profileInfo
 }
+
+export const getCurrentUser = createSelector(getProfileInfo,
+    (profileInfo) => profileInfo.user
+)
+export const getIsLoadingCompanies = (state) =>{
+    return state.companies.isLoadingCompanies;
+}
+
 export const getMyCompanies =  createSelector ( getCompanies,getCurrentUser,
     (companies,currentUser)=>{
         return companies.filter(company =>{            
             return company.userID === currentUser.id
         })
 })
-
-export const getProfileInfo = (state) =>{
-    return state.profileInfo
-}
-
 export const getAuthStatus =  createSelector ( getProfileInfo,
     (profileInfo)=>profileInfo.isAuth
 )
-
-
-export const getUserAuthStatus = (state) =>{
-    return state.profileInfo.isAuth;
-}
 
 export const getSelectedCompanyID = (state)=>{
     return state.companies?.selectedCompany?._id

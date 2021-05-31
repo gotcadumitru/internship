@@ -1,6 +1,6 @@
 import { companyAPI } from "../../api/api";
 import { getUserThunk } from "../../user/redux/user-thunk";
-import { setActiveCompany, setCompaniesAC } from "./company-action-creator";
+import { handleCompaniesIsLoading, setActiveCompany, setCompaniesAC } from "./company-action-creator";
 
 export const addCompanyThunk = (values,setErrors) => async (dispatch) => {
 
@@ -59,14 +59,13 @@ export const editServicesThunk = (serviceData) => async (dispatch) => {
 }
 
 export const setCompaniesThunk = () => async (dispatch) => {
-
+    dispatch(handleCompaniesIsLoading(true))
     const data = await companyAPI.getCompanies();
     if (data) {
         if (data.succes) {
-           dispatch(setCompaniesAC(data.companies))
+           dispatch(setCompaniesAC(data.companies));
+           dispatch(handleCompaniesIsLoading(false));
         }
-    }
-    else {
     }
 }
 export const deleteCompanyThunk = (companyID) => async (dispatch) => {

@@ -1,8 +1,9 @@
 import React from 'react';
 import {  useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
-import { getCurrentUser } from '../../../../selectors/selectors';
+import { useHistory } from 'react-router-dom';
+import { getAuthStatus, getCurrentUser } from '../../../../selectors/selectors';
 import { logOutThunk } from '../../../../user/redux/user-thunk';
+import CustomLoader from '../../../loader/Loader';
 import Logo from './../../../../assets/images/dashboard/profileLogo.jpg'
 import './Header.css'
 
@@ -17,6 +18,7 @@ const Header = (props) => {
     }
 
     const user = useSelector(getCurrentUser);
+    const isAuth = useSelector(getAuthStatus);
 
     const dispatch = useDispatch();
 
@@ -26,8 +28,10 @@ const Header = (props) => {
         <div className="header">
             <div className="header_container">
                 <div className="header_options">
-                    {user.name ?
-                        <div className="option">
+                        {
+                            !isAuth ?
+                            <CustomLoader forHeader="true"/>
+                            : <div className="option">
 
                                <div onClick={()=>history.push('/profile')} className="header_profile">
                                      <div className="header_user_image">
@@ -44,11 +48,7 @@ const Header = (props) => {
                             </div>
 
                         </div>
-                        : <div className="option">
-                            <Link to='/auth/register'>Register</Link>
-                        </div>
-                    }
-
+                        }
                 </div>
             </div>
         </div>

@@ -41,6 +41,6 @@ const MenuItem = ({Component,...props})=>{
                 </div>
 
             </div>
-)
+    )
 }
 export default ProfileMenu

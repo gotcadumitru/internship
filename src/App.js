@@ -12,8 +12,12 @@ import 'reactjs-popup/dist/index.css';
 import { BrowserRouter } from 'react-router-dom';
 
 
+
 function App(props) {
-  
+
+
+
+
   const dispatch = useDispatch();
 
   useEffect(()=>{
@@ -25,7 +29,6 @@ function App(props) {
   return (
     <div>
           <BrowserRouter>
-
      
     <Switch>
       <Route path='/profile' render={()=>  <div><ProfilePage/> </div> }/>

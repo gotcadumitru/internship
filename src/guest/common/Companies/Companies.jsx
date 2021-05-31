@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import CustomButton from '../../../common/custom-button/CustomButton';
-import { getCompanies } from '../../../selectors/selectors';
+import { getCompanies, getIsLoadingCompanies } from '../../../selectors/selectors';
 import CompanyCard from '../CompanyCard/CompanyCard';
 import { GrPowerReset } from "react-icons/gr";
 import { getDateTodayForInputDate } from '../../../common/helpers/data.helper';
+import CustomLoader from '../../../common/loader/Loader';
 
 const Companies = ({ makeReservationThunk, ...props }) => {
 
     const companies = useSelector(getCompanies);
+    const isLoadingCompanies = useSelector(getIsLoadingCompanies);
 
     const [formData, handleFormData] = useState({
         searchText: '',
@@ -141,25 +143,28 @@ const Companies = ({ makeReservationThunk, ...props }) => {
                         </Col>
                     </Row>
 
+                    {
+                    isLoadingCompanies
+                        ? <CustomLoader/>
+                        : <Row>
+                            {
+                                filterCompanies.length
+                                    ? filterCompanies.map(companyWithService => {
+                                        return (
+                                            <Col key={companyWithService.serviceID} xs={12} lg={6} xl={4}>
+                                                <CompanyCard companyWithService={companyWithService} />
+                                            </Col>
+                                        )
 
-                    <Row>
-                        {
-                            filterCompanies.length
-                                ? filterCompanies.map(companyWithService => {
-                                    return (
-                                        <Col key={companyWithService.serviceID} xs={12} lg={6} xl={4}>
-                                            <CompanyCard companyWithService={companyWithService} />
-                                        </Col>
+                                    }
                                     )
-
-                                }
-                                )
-                                :
-                                <div className="main_companies_no_company">
-                                    There are no companies for your preferences
+                                    :
+                                    <div className="main_companies_no_company">
+                                        There are no companies for your preferences
                                 </div>
-                        }
-                    </Row>
+                            }
+                        </Row>
+                    }
 
                 </Container>
 
